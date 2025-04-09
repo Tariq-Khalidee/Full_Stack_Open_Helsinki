@@ -1,3 +1,4 @@
+```mermaid
 sequenceDiagram
     participant User
     participant Browser
@@ -16,3 +17,4 @@ sequenceDiagram
 
     Server-->>Browser: HTML page with new note included
     Browser-->>User: Page reloads and displays updated list of notes
+```
