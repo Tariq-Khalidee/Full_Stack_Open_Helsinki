@@ -16,7 +16,10 @@ const StatisticLine = ({text, value}) => {
   )
 }
 
-
+const getRandomItem = (arr) => {
+  const randomIndex = Math.floor(Math.random() * arr.length)
+  return arr[randomIndex]
+}
 const Statistics = (props) => {
   const {good,neutral,bad} = props
   const total = good + neutral + bad
