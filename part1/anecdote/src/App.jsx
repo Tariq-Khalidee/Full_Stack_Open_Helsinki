@@ -24,19 +24,36 @@ const App = () => {
   const handleQuoteClick = () => {
     setSelected(getRandomIndex(anecdotes))
   }
-  
+
+  const maxVotes = Math.max(...allVotes)
+  const maxIndex = allVotes.indexOf(maxVotes)
+
   const handleVoteClick = () => {
     const newVotes = [...allVotes]
     newVotes[selected] += 1
     setVotes(newVotes)
   }
+
+
   return (
     <div>
-      <h1>{anecdotes[selected]}</h1>
-      <h1>has {allVotes[selected]} votes</h1>
+      <h1>Anecdote of the day</h1>
+      <p>{anecdotes[selected]}</p>
+      <p>has {allVotes[selected]} votes</p>
 
       <button onClick={handleVoteClick}>vote</button>
       <button onClick={handleQuoteClick}>next anecdote</button>
+
+      <h1>Anecdote with most votes</h1>
+      {maxVotes > 0 ? (
+        <div>
+          <p>{anecdotes[maxIndex]}</p>
+          <p>has {maxVotes} votes</p>
+        </div>
+      ) : (
+        <p>No votes yet</p>
+      )}
+      
     </div>
   )
 }
