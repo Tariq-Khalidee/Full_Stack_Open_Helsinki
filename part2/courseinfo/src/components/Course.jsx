@@ -14,12 +14,18 @@ const Part = (props) => (
   </p>
 )
 
+const SumExercises = (props) => (
+    <p>
+       <b> total of {props.parts.reduce((acc, curr) => acc + curr.exercises, 0 )} exercises </b>
+    </p>
+)
 
 const Course = (props) => {
     return (
         <div>
             <Header course={props.course.name}/>
             <Content parts={props.course.parts}/>
+            <SumExercises parts={props.course.parts}/>
         </div>
     )
 }
