@@ -2,7 +2,7 @@ const ShowPerson = (props) => (
     <p>{props.name} {props.phone}</p>
   );
   
-  const ShowPersons = (props) => {
+  const Persons = (props) => {
     return (
       <>
         {props.persons.map((person, index) => (
@@ -12,5 +12,5 @@ const ShowPerson = (props) => (
     );
   };
   
-  export default ShowPersons;
+  export default Persons;
   
