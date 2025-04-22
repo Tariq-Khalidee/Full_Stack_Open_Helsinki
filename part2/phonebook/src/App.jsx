@@ -10,35 +10,43 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
 
+  const baseURL = 'http://localhost:3002/persons'
   const hook = () => {
     console.log('effect function')
+  
     axios
-      .get('http://localhost:3001/persons')
+      .get(baseURL)
       .then(response => {
         console.log('promise fullfilled')
         setPersons(response.data)
       })
+    
   }
   useEffect(hook, [])
   const handleAddPerson = (event) => {
     event.preventDefault()
+    const personExists = persons.some(
+    (person) => person.name.toLowerCase() === newName.trim().toLowerCase()
+    )
+    if (personExists) {
+      alert(`${newName} is already added to phonebook`)
+      setNewName('')
+      setNewNumber('')
+      return
+    }
     const personObject = {
       name: newName,
       number: newNumber
     }
-
-    const personExists = persons.some(
-      (person) => person.name.toLowerCase() === newName.trim().toLowerCase()
-    )
-    
-
-    if (personExists) {
-      alert(`${newName} is already added to phonebook`)
-      return
-    }
-      setPersons(persons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
+    console.log(personObject)
+    axios
+      .post(baseURL, personObject)
+      .then(response => {
+        console.log('Post response: ',response)
+        setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewNumber('')
+        })
   }
 
   const handlePersonChange = (event) => {
