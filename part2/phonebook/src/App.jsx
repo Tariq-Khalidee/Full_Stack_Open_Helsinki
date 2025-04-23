@@ -1,28 +1,28 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
+import personService from './services/personService'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('') 
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
-
-  const baseURL = 'http://localhost:3002/persons'
+  
   const hook = () => {
     console.log('effect function')
-  
-    axios
-      .get(baseURL)
-      .then(response => {
-        console.log('promise fullfilled')
-        setPersons(response.data)
+
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
     
   }
+  
   useEffect(hook, [])
+  
   const handleAddPerson = (event) => {
     event.preventDefault()
     const personExists = persons.some(
@@ -39,14 +39,13 @@ const App = () => {
       number: newNumber
     }
     console.log(personObject)
-    axios
-      .post(baseURL, personObject)
-      .then(response => {
-        console.log('Post response: ',response)
-        setPersons(persons.concat(response.data))
+    personService
+      .create(personObject)
+      .then(returnedPersons => {
+        setPersons(persons.concat(returnedPersons))
         setNewName('')
         setNewNumber('')
-        })
+      })
   }
 
   const handlePersonChange = (event) => {
@@ -67,6 +66,24 @@ const App = () => {
     )
   : persons;
 
+  const handleDelete = (id, name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      personService
+        .remove(id)
+        .then(() => {
+          setPersons(prevPersons => {
+            const updated = prevPersons.filter(p => p.id !== id)
+            console.log('Updated list:', updated)
+            return updated
+          })
+          
+        })
+        .catch(error => {
+          console.error('Error deleting: ', error)
+          alert(`Failed to delete ${name}. Maybe already removed`)
+        })
+    }
+  }
   return (
     <div>
       <h2>Phonebook</h2>
@@ -80,7 +97,7 @@ const App = () => {
       numberChangeHandler={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons persons={personsToShow}/>
+      <Persons persons={personsToShow} deleteHandler={handleDelete}/>
     </div>
   )
 }
