@@ -25,19 +25,41 @@ const App = () => {
   
   const handleAddPerson = (event) => {
     event.preventDefault()
-    const personExists = persons.some(
+    
+    const personExists = persons.find(
     (person) => person.name.toLowerCase() === newName.trim().toLowerCase()
     )
-    if (personExists) {
-      alert(`${newName} is already added to phonebook`)
-      setNewName('')
-      setNewNumber('')
-      return
+    console.log(personExists)
+    const personObjectNumber = {
+      ...personExists, 
+      number: newNumber,
     }
-    const personObject = {
+    const personObject ={
       name: newName,
       number: newNumber
     }
+   
+    if (personExists) {
+      const confirmUpdate = window.confirm(
+        `${newName} is already added to phonebook. Replace the old number with new one?`
+      )
+      if (confirmUpdate) {
+        personService
+          .update(personExists.id, personObjectNumber)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id === personExists.id ? returnedPerson : person))
+            setNewName('')
+            setNewNumber('')
+          })
+          .catch(error => {
+            alert(`Info with name ${newName} has already been removed from server`)
+            setPersons(persons.filter(person => person.id !== personExists.id))
+          })
+        }
+        return
+    }
+
+    
     console.log(personObject)
     personService
       .create(personObject)

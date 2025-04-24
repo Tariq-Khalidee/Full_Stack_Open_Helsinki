@@ -10,7 +10,7 @@ const ShowPerson = (props) => (
   const Persons = (props) => {
     return (
       <>
-        {props.persons.map((person, index) => (
+        {props.persons.map((person) => (
           <ShowPerson 
           key={person.id} 
           id = {person.id}
