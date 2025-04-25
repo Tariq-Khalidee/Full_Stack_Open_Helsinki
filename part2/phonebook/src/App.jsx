@@ -54,11 +54,12 @@ const App = () => {
             setNewNumber('')
           })
           .catch(error => {
-            alert(`Info with name ${newName} has already been removed from server`)
+            setNotificationMsg({text:`Info with name ${newName} has already been removed from server`, type: 'error' })
+            setTimeout(() => setNotificationMsg(null), 5000)
             setPersons(persons.filter(person => person.id !== personExists.id))
           })
         }
-        setNotificationMsg(`Changed ${newName}'s number.`)
+        setNotificationMsg({text: `Changed ${newName}'s number`, type: 'success'})
         setTimeout(() => setNotificationMsg(null), 5000)
         return
     }
@@ -69,7 +70,7 @@ const App = () => {
       .create(personObject)
       .then(returnedPersons => {
         setPersons(persons.concat(returnedPersons))
-        setNotificationMsg(`Added ${newName}`)
+        setNotificationMsg({text:`Added ${newName}`, type: 'success'})
         setNewName('')
         setNewNumber('')
         setTimeout(() => setNotificationMsg(null), 5000)
@@ -101,14 +102,14 @@ const App = () => {
         .then(() => {
           setPersons(prevPersons => {
             const updated = prevPersons.filter(p => p.id !== id)
-            console.log('Updated list:', updated)
+            setNotificationMsg({text:`Removed ${name} from server`, type:'success'})
+            setTimeout(() => setNotificationMsg(null), 5000)
             return updated
-          })
-          
+          })          
         })
         .catch(error => {
-          console.error('Error deleting: ', error)
-          alert(`Failed to delete ${name}. Maybe already removed`)
+          setNotificationMsg({text:`Failed to delete ${name}. Maybe already removed`, type: 'error' })
+          setTimeout(() => setNotificationMsg(null), 5000)
         })
     }
   }
